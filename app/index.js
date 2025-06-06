@@ -37,9 +37,17 @@ function startApp(connection) {
     });
   });
 
-  app.listen(port, () => {
-    console.log(`🚀 Node.js app running at http://localhost:${port}`);
+// New route to list users
+  app.get('/users', (req, res) => {
+    connection.query('SELECT * FROM users', (err, results) => {
+      if (err) return res.status(500).send(err);
+      res.json(results);   // return users as JSON
+    });
   });
+
 }
 
+app.listen(port, () => {
+    console.log(`🚀   Node.js app running at http://localhost:${port}`);
+  });
 connectWithRetry();
