@@ -1,0 +1,30 @@
+VERSION
+SERVICES:
+	mysql:
+		image: mysql:8
+        restart: always
+		environment:
+			- MYSQL_ROOT_PASSWORD: rootpass
+			- MYSQL_USER: user
+			- MYSQL_DATABASE: testdb
+			- MYSQL_PASSWORD:password
+		volumes:
+            - mysql_data:/var/lib/mysql
+		networks:
+            - app-network
+		ports:
+			- "3306:3306"
+	nodeapp:
+		build:./app
+		ports:
+			"3000:3000"
+		depends_on:
+			mysql
+		networks:
+			- app-network
+networks:
+    app-network:
+        driver: bridge
+volumes:
+    mysql_data:
+				
