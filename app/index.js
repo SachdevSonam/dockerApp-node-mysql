@@ -1,7 +1,11 @@
+require('dotenv').config();
+const morgan = require('morgan');
+app.use(morgan('tiny'));
 const express = require('express');
 const mysql = require('mysql2');
 const app = express();
 const port = process.env.PORT || 3000;
+
 
 function connectWithRetry(retries = 5) {
   const connection = mysql.createConnection({
@@ -40,6 +44,28 @@ function startApp(connection) {
   app.listen(port, () => {
     console.log(`🚀 Node.js app running at http://localhost:${port}`);
   });
+  // New route to list users
+  app.get('/users', (req, res) => {
+    connection.query('SELECT * FROM users', (err, results) => {
+      if (err) return res.status(500).send(err);
+      res.json(results);   // return users as JSON
+    });
+  });
 }
+
+app.listen(port, () => {
+    console.log(`🚀 Node.js app running at http://localhost:${port}`);
+  });
+
+process.on('SIGINT', () => {
+  console.log('❎ Caught SIGINT, shutting down gracefully...');
+  process.exit();
+});
+
+process.on('SIGTERM', () => {
+  console.log('❎ Caught SIGTERM, shutting down gracefully...');
+  process.exit();
+});
+
 
 connectWithRetry();
