@@ -10,6 +10,9 @@ services:
       - "3306:3306"
     networks:
       - app-network
+    volumes:
+      - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql-data:/var/lib/mysql
 
   nodeapp:
     build: ./app
@@ -29,3 +32,5 @@ services:
 networks:
   app-network:
     driver: bridge
+volumes:
+  mysql-data:
