@@ -1,14 +1,15 @@
 const express = require('express');
 const mysql = require('mysql2');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 function connectWithRetry(retries = 5) {
   const connection = mysql.createConnection({
-    host: 'mysql',     // service name from docker-compose
-    user: 'user',
-    password: 'password',
-    database: 'testdb'
+    host: process.env.DB_HOST || 'mysql',          // Default to Docker service name
+    user: process.env.DB_USER || 'user',
+    password: process.env.DB_PASS || 'password',
+    database: process.env.DB_NAME || 'testdb',
+    port: process.env.DB_PORT || 3306
   });
 
   connection.connect((err) => {
