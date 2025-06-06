@@ -12,7 +12,9 @@ services:
       - app-network
 
   nodeapp:
-    build: .
+    build: ./app
+    ports:
+      - "3000:3000"
     depends_on:
       - mysql
     environment:
